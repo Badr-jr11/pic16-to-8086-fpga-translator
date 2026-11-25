@@ -1,0 +1,40 @@
+Intel 8086 version of the same program - DOSBox + DEBUG
+(use this only if you work with DEBUG; with TASM use ADD_8086.ASM)
+===================================================================
+
+In DOSBox:
+   mount c c:\dos          (the folder where DEBUG.EXE is)
+   c:
+   debug
+
+In DEBUG type (the "-" is the DEBUG prompt, do not type it):
+
+-a 100
+mov al,0
+mov byte ptr [0020],0
+add al,25
+add [0020],al
+add al,[0020]
+add al,c0
+int 20
+                           (empty line = press Enter to finish)
+-u 100 l 15
+
+EXPECTED LISTING (address, machine code, instruction):
+
+xxxx:0100  B000          MOV  AL,00
+xxxx:0102  C606200000    MOV  BYTE PTR [0020],00
+xxxx:0107  0425          ADD  AL,25          <- PIC  ADDLW 0x25    (3E25)
+xxxx:0109  00062000      ADD  [0020],AL      <- PIC  ADDWF 0x20,F  (07A0)
+xxxx:010D  02062000      ADD  AL,[0020]      <- PIC  ADDWF 0x20,W  (0720)
+xxxx:0111  04C0          ADD  AL,C0          <- PIC  ADDLW 0xC0    (3EC0)
+xxxx:0113  CD20          INT  20
+
+STEP BY STEP EXECUTION (to compare the results with MPLAB):
+
+-r                 show the registers
+-t                 execute one instruction (repeat 6 times)
+                   AL after each step: 00, 00, 25, 25, 4A, 0A
+                   after the last step the carry flag is set (CY)
+-d 20 l 1          memory byte [0020] = 25
+-q                 quit (do not run the program with g)
