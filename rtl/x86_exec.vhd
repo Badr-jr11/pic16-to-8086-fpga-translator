@@ -39,6 +39,8 @@ architecture Behavioral of x86_exec is
                af     : out STD_LOGIC);
     end component;
 
+    for all : x86_alu use entity work.x86_alu(Behavioral);
+
     constant OP_ADD_AL_IMM : std_logic_vector (7 downto 0) := x"04";
     constant OP_ADD_AL_MEM : std_logic_vector (7 downto 0) := x"02";
     constant OP_ADD_MEM_AL : std_logic_vector (7 downto 0) := x"00";

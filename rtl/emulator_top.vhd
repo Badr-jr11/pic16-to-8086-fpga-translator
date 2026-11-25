@@ -69,6 +69,12 @@ architecture Behavioral of emulator_top is
                flags   : out STD_LOGIC_VECTOR (7 downto 0));
     end component;
 
+    -- explicit bindings (portable across ISE, ISim, ModelSim and GHDL)
+    for all : uart_rx     use entity work.uart_rx(Behavioral);
+    for all : uart_tx     use entity work.uart_tx(Behavioral);
+    for all : pic_to_8086 use entity work.pic_to_8086(Behavioral);
+    for all : x86_exec    use entity work.x86_exec(Behavioral);
+
     type state_type is (S_HIGH, S_LOW, S_DECODE, S_SEND, S_WAIT);
     signal state    : state_type := S_HIGH;
 

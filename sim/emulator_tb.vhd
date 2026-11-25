@@ -51,6 +51,9 @@ architecture behavior of emulator_tb is
     signal rx_count : integer := 0;                        -- bytes received so far
     signal errors   : integer := 0;                        -- mismatches seen by the monitor
 
+    -- explicit binding (portable across ISE, ISim, ModelSim and GHDL)
+    for uut : emulator_top use entity work.emulator_top(Behavioral);
+
     signal clk : std_logic := '0';
     signal rst : std_logic := '1';
     signal rxd : std_logic := '1';
@@ -118,6 +121,7 @@ begin
             report "Flags wrong (expected 01h: CF = 1)" severity error;
         wait for 4 us;
         sw <= "00";                                      -- led = status
+        wait for 1 us;
 
         -- final verdict
         assert rx_count = 13
